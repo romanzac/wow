@@ -1,0 +1,16 @@
+FROM rust:1.67.1-slim-buster as builder
+WORKDIR /usr/src/myapp
+COPY . .
+RUN cargo build --bin wclient --release
+
+FROM debian:buster-slim
+RUN apt-get update; apt-get -y upgrade
+
+RUN mkdir -p "/usr/local/wow"
+
+COPY --from=builder /usr/src/myapp/target/release/wclient /usr/local/wow
+COPY --from=builder /usr/src/myapp/scripts/start_wclient.sh /usr/local/wow
+
+WORKDIR /usr/local/wow
+
+CMD ["./start_wclient.sh"]

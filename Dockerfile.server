@@ -1,0 +1,18 @@
+FROM rust:1.67.1-slim-buster as builder
+WORKDIR /usr/src/myapp
+COPY . .
+RUN cargo build --bin wserver --release
+
+FROM debian:buster-slim
+RUN apt-get update; apt-get -y upgrade
+
+RUN mkdir -p "/usr/local/wow"
+
+COPY --from=builder /usr/src/myapp/target/release/wserver /usr/local/wow
+COPY --from=builder /usr/src/myapp/wserver/config/wow_docker.toml /usr/local/wow
+COPY --from=builder /usr/src/myapp/wserver/data/quotes.json /usr/local/wow
+COPY --from=builder /usr/src/myapp/scripts/start_wserver.sh /usr/local/wow
+
+WORKDIR /usr/local/wow
+
+CMD ["./start_wserver.sh"]
