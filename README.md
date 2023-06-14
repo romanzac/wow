@@ -5,7 +5,7 @@ Word of Wisdom TCP server/client example implementation with Argon2d as a Proof 
 #### To clone the repository, use the following commands:
 
 ```sh
-git clone https://github.com/romanzac/wow
+git clone https://github.com/romanzac/wow.git
 ```
 
 #### Build docker images
